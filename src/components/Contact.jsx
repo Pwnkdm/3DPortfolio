@@ -5,7 +5,8 @@ import { styles } from "../style";
 import { EarthCanvas } from "./canvas";
 import { SectionWrapper } from "../hoc";
 import { slideIn } from '../utils/motion';
-
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Contact = () => {
   const formRef = useRef();
@@ -23,11 +24,26 @@ const Contact = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+     // Check for empty fields
+    if(!form.name){
+      toast.error("Please enter your name!");
+      return
+    }
+    else if(!form.email){
+      toast.error("Please enter your email!");
+      return
+    }
+    else if(!form.message){
+      toast.error("Please enter your message!");
+      return
+    }   
+
     setLoading(true);
 
     emailjs.send(
-      "service_key",
-      "template_key",
+      "service_9ddzn4g",
+      "template_pu039kk",
       {
         from_name: form.name,
         to_name:"PawanRaje",
@@ -35,11 +51,11 @@ const Contact = () => {
         to_email:"Pawanrajkadam@gmail.com",
         message:form.message,
       },
-      "public_key",
+      "V1M6M5rtr1mKbujTV",
     )
     .then(()=>{
       setLoading(false);
-      alert("Thank You. I will get back to you as soon as possible.");
+      toast.success("Thank You. I will get back to you as soon as possible.");
       setForm({
         name:'',
         email:'',
@@ -48,13 +64,14 @@ const Contact = () => {
     }, (error)=>{
       setLoading(false);
       console.log(error);
-      alert("Something went wrong!");
+      toast.error("Something went wrong!");
     })
   };
 
   return (
     <div 
     className='xl:mt-12 xl:flex-row flex-col-reverse flex gap-10 overflow-hidden'>
+     <ToastContainer />
      <motion.div
      variants={slideIn("left", "tween", 0.2, 1)}
      className='flex-[0.75] bg-black-100 p-8 rounded-2xl'
